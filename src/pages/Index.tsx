@@ -1,6 +1,14 @@
 import { Layout } from "@/components/Layout";
 import { Card } from "@/components/ui/card";
 import { Users, DollarSign, TrendingUp, Clock } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
 
 const stats = [
   {
@@ -34,14 +42,32 @@ const stats = [
 ];
 
 const Index = () => {
+  const [timePeriod, setTimePeriod] = useState("7d");
+
   return (
     <Layout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">Welcome back</h1>
-          <p className="text-muted-foreground mt-2">
-            Here's what's happening with your contacts today.
-          </p>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight">Welcome back</h1>
+              <p className="text-muted-foreground mt-2">
+                Here's what's happening with your contacts today.
+              </p>
+            </div>
+            <Select value={timePeriod} onValueChange={setTimePeriod}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select time period" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="24h">Last 24 hours</SelectItem>
+                <SelectItem value="7d">Last 7 days</SelectItem>
+                <SelectItem value="30d">Last 30 days</SelectItem>
+                <SelectItem value="90d">Last 90 days</SelectItem>
+                <SelectItem value="12m">Last 12 months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
