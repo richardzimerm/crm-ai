@@ -38,7 +38,7 @@ const Index = () => {
     <Layout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">Inicial</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Welcome back</h1>
           <p className="text-muted-foreground mt-2">
             Here's what's happening with your contacts today.
           </p>
