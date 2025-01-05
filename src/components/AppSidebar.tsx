@@ -1,4 +1,4 @@
-import { Users, BarChart3, PieChart, Settings, Search, Plus } from "lucide-react";
+import { Users, BarChart3, PieChart, Settings, Search, Plus, Building2 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { title: "Dashboard", icon: BarChart3, url: "/" },
+  { title: "Clients", icon: Building2, url: "/clients" },
   { title: "Contacts", icon: Users, url: "/contacts" },
   { title: "Deals", icon: PieChart, url: "/deals" },
   { title: "Settings", icon: Settings, url: "/settings" },
