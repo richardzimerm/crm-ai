@@ -8,6 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { useState } from "react";
 
 const stats = [
@@ -17,6 +22,7 @@ const stats = [
     icon: Users,
     change: "+12%",
     changeType: "positive",
+    summary: "234 new contacts added this month. Most active sectors: Technology and Healthcare.",
   },
   {
     title: "Revenue",
@@ -24,6 +30,7 @@ const stats = [
     icon: DollarSign,
     change: "+8%",
     changeType: "positive",
+    summary: "Monthly recurring revenue: $42,000. One-time purchases: $10,000. Top product: Enterprise Plan.",
   },
   {
     title: "Active Deals",
@@ -31,6 +38,7 @@ const stats = [
     icon: TrendingUp,
     change: "-3%",
     changeType: "negative",
+    summary: "8 deals in negotiation, 12 in proposal stage, 4 pending closure. Average deal size: $15,000.",
   },
   {
     title: "Recent Activities",
@@ -38,6 +46,7 @@ const stats = [
     icon: Clock,
     change: "+24%",
     changeType: "positive",
+    summary: "45 emails sent, 23 meetings scheduled, 15 calls made, 6 proposals sent in the last 7 days.",
   },
 ];
 
@@ -72,27 +81,36 @@ const Index = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
-            <Card
-              key={stat.title}
-              className="p-6 glass-card hover-scale transition-all duration-200"
-            >
-              <div className="flex items-center justify-between">
-                <stat.icon className="h-6 w-6 text-muted-foreground" />
-                <span
-                  className={`text-sm font-medium ${
-                    stat.changeType === "positive"
-                      ? "text-success"
-                      : "text-coral"
-                  }`}
-                >
-                  {stat.change}
-                </span>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-2xl font-bold">{stat.value}</h3>
-                <p className="text-sm text-muted-foreground">{stat.title}</p>
-              </div>
-            </Card>
+            <HoverCard key={stat.title}>
+              <HoverCardTrigger asChild>
+                <Card className="p-6 glass-card hover-scale transition-all duration-200 cursor-pointer">
+                  <div className="flex items-center justify-between">
+                    <stat.icon className="h-6 w-6 text-muted-foreground" />
+                    <span
+                      className={`text-sm font-medium ${
+                        stat.changeType === "positive"
+                          ? "text-success"
+                          : "text-coral"
+                      }`}
+                    >
+                      {stat.change}
+                    </span>
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="text-2xl font-bold">{stat.value}</h3>
+                    <p className="text-sm text-muted-foreground">{stat.title}</p>
+                  </div>
+                </Card>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold">{stat.title} Overview</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {stat.summary}
+                  </p>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           ))}
         </div>
 
