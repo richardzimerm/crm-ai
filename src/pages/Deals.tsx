@@ -1,157 +1,130 @@
+import React, { useState } from "react";
 import { Layout } from "@/components/Layout";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { DollarSign } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useState } from "react";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import PipelineView from "@/components/pipeline/PipelineView";
+import { Plus } from "lucide-react";
 
-const deals = [
+// Sample data - in a real app, this would come from your backend
+const defaultPipeline = {
+  id: "default",
+  name: "Sales Pipeline",
+  stages: ["Lead", "Negotiation", "Proposal", "Contract", "Closed"],
+};
+
+const sampleDeals = [
   {
-    name: "Enterprise Solution Package",
-    value: "$125,000",
+    name: "Project Alpha",
+    value: "$25,000",
     company: "TechCorp Solutions",
     stage: "Negotiation",
     probability: "80%",
     nextStep: "Contract review scheduled for next week",
-    owner: "Sarah Johnson",
-    lastActivity: "2 days ago",
-    expectedCloseDate: "2024-04-15",
-    notes: "Client is particularly interested in the analytics module. Need to prepare detailed ROI analysis.",
   },
   {
-    name: "Cloud Migration Project",
-    value: "$85,000",
+    name: "Beta Enhancement",
+    value: "$15,000",
     company: "MarketPro Inc",
     stage: "Proposal",
     probability: "60%",
-    nextStep: "Technical requirements review",
-    owner: "Michael Chen",
-    lastActivity: "1 day ago",
-    expectedCloseDate: "2024-05-01",
-    notes: "Competing with two other vendors. Our unique security features could be the differentiator.",
+    nextStep: "Follow up on technical requirements",
   },
   {
-    name: "Digital Transformation Initiative",
-    value: "$250,000",
+    name: "Gamma Integration",
+    value: "$35,000",
     company: "IndustryTech",
-    stage: "Final Review",
+    stage: "Contract",
     probability: "90%",
-    nextStep: "Executive presentation",
-    owner: "Emily Rodriguez",
-    lastActivity: "3 hours ago",
-    expectedCloseDate: "2024-03-30",
-    notes: "Board approval pending. Previous implementation success stories have been well received.",
+    nextStep: "Executive presentation scheduled",
   },
   {
-    name: "Software Integration Project",
-    value: "$75,000",
-    company: "Global Services Ltd",
-    stage: "Discovery",
+    name: "Delta Project",
+    value: "$50,000",
+    company: "MegaCorp",
+    stage: "Lead",
     probability: "40%",
-    nextStep: "Solution demonstration",
-    owner: "David Kim",
-    lastActivity: "5 days ago",
-    expectedCloseDate: "2024-06-15",
-    notes: "Budget constraints might be an issue. Preparing scaled-down alternative proposal.",
+    nextStep: "Initial meeting scheduled",
   },
 ];
 
 const Deals = () => {
-  const [timePeriod, setTimePeriod] = useState("all");
+  const [pipelines, setPipelines] = useState([defaultPipeline]);
+  const [selectedPipeline, setSelectedPipeline] = useState(defaultPipeline);
+  const [newPipelineName, setNewPipelineName] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleCreatePipeline = () => {
+    if (newPipelineName.trim()) {
+      const newPipeline = {
+        id: `pipeline-${pipelines.length + 1}`,
+        name: newPipelineName,
+        stages: ["Lead", "Negotiation", "Proposal", "Contract", "Closed"], // Default stages
+      };
+      setPipelines([...pipelines, newPipeline]);
+      setNewPipelineName("");
+      setIsDialogOpen(false);
+    }
+  };
 
   return (
     <Layout>
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">Deals Pipeline</h1>
-            <p className="text-muted-foreground mt-2">
-              Track and manage your active deals and opportunities.
+            <h1 className="text-3xl font-bold tracking-tight">Deals</h1>
+            <p className="text-muted-foreground">
+              Manage your deals and pipelines
             </p>
           </div>
-          <Select value={timePeriod} onValueChange={setTimePeriod}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by time" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Deals</SelectItem>
-              <SelectItem value="thisMonth">This Month</SelectItem>
-              <SelectItem value="thisQuarter">This Quarter</SelectItem>
-              <SelectItem value="thisYear">This Year</SelectItem>
-            </SelectContent>
-          </Select>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                New Pipeline
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Pipeline</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Pipeline Name</Label>
+                  <Input
+                    id="name"
+                    value={newPipelineName}
+                    onChange={(e) => setNewPipelineName(e.target.value)}
+                    placeholder="Enter pipeline name..."
+                  />
+                </div>
+                <Button onClick={handleCreatePipeline}>Create Pipeline</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
-        <div className="grid gap-6">
-          {deals.map((deal) => (
-            <HoverCard key={deal.name}>
-              <HoverCardTrigger asChild>
-                <Card className="p-6 hover:bg-muted/50 transition-colors cursor-pointer">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                        <DollarSign className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium">{deal.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {deal.company}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">{deal.value}</p>
-                      <p className="text-sm text-success">{deal.stage}</p>
-                    </div>
-                  </div>
-                </Card>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-96">
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-semibold">{deal.name}</h4>
-                    <p className="text-sm text-muted-foreground">{deal.company}</p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <p className="font-medium">Value:</p>
-                      <p className="text-muted-foreground">{deal.value}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium">Probability:</p>
-                      <p className="text-muted-foreground">{deal.probability}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium">Owner:</p>
-                      <p className="text-muted-foreground">{deal.owner}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium">Last Activity:</p>
-                      <p className="text-muted-foreground">{deal.lastActivity}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="font-medium">Next Step:</p>
-                    <p className="text-sm text-muted-foreground">{deal.nextStep}</p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Notes:</p>
-                    <p className="text-sm text-muted-foreground">{deal.notes}</p>
-                  </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          ))}
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            {pipelines.map((pipeline) => (
+              <Button
+                key={pipeline.id}
+                variant={selectedPipeline.id === pipeline.id ? "default" : "outline"}
+                onClick={() => setSelectedPipeline(pipeline)}
+              >
+                {pipeline.name}
+              </Button>
+            ))}
+          </div>
+
+          <PipelineView pipeline={selectedPipeline} deals={sampleDeals} />
         </div>
       </div>
     </Layout>
